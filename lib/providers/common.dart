@@ -7,4 +7,11 @@ class CommonProvider with ChangeNotifier {
     _bottomBarSelectedIndex = index;
     notifyListeners();
   }
+
+  bool _isLoggedIn = false;
+  bool get loggedIn => _isLoggedIn;
+  void setIsLoggedIn(bool value) {
+    _isLoggedIn = value;
+    notifyListeners();
+  }
 }
