@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 
 class AutoTrade extends StatelessWidget {
   const AutoTrade({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
