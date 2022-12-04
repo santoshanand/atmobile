@@ -1,4 +1,4 @@
-import 'package:auto_trade/providers/nse.dart';
+import 'package:auto_trade/core/providers/nse.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

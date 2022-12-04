@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:auto_trade/models/market_status.dart';
+import 'package:auto_trade/core/models/market_status.dart';
 
 class NSEDataProvider {
   final marketStatusUrl = '/api/marketStatus';

@@ -1,5 +1,5 @@
 import 'package:auto_trade/screens/landing/landing.dart';
-import 'package:auto_trade/theme/app_theme.dart';
+import 'package:auto_trade/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class AutoTrade extends StatelessWidget {
@@ -9,7 +9,7 @@ class AutoTrade extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Auto Trade',
       theme: applicationTheme,
       debugShowCheckedModeBanner: false,
       home: const Landing(title: 'Auto Trade'),
