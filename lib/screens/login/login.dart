@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:auto_trade/core/models/login_request.dart';
-import 'package:auto_trade/core/providers/common.dart';
+import 'package:auto_trade/core/providers/api_provider.dart';
+import 'package:auto_trade/core/providers/app_provider.dart';
 import 'package:auto_trade/utils/env.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,42 +15,56 @@ class LoginScreenTemp extends ConsumerWidget {
 
   LoginScreenTemp({Key? key}) : super(key: key);
 
-  Future<LoginRequest> _getLoginRequest() async {
+  Future<LoginRequest?> _getLoginRequest() async {
     final gotCookies = await cookieManager.getCookies(Env.kiteUrl);
-    LoginRequest login = LoginRequest(token: "", userId: "");
+    LoginRequest loginReq = LoginRequest(token: "", userId: "");
     for (var item in gotCookies) {
       if (item.name == "enctoken") {
-        login.token = item.value;
+        loginReq.token = item.value;
       }
       if (item.name == "user_id") {
-        login.userId = item.value;
+        loginReq.userId = item.value;
       }
     }
-    return login;
+    if (loginReq.token == "" || loginReq.userId == "") {
+      return null;
+    }
+    return loginReq;
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var cp = ref.watch(commonProvider);
+    AppNotifier an = ref.watch(appProvider);
+
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        toolbarOpacity: .5,
+      ),
       body: SafeArea(
-        child: WebView(
-          initialUrl: Env.kiteUrl,
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (WebViewController webViewController) {
-            _controller.complete(webViewController);
-          },
-          onPageFinished: (String url) async {
-            LoginRequest login = await _getLoginRequest();
-            if (login.token != "" && login.userId != "") {
-              var res = await cp.login(login, cookieManager);
-              if (res == null) {
-                cp.logOut();
-              }
-            }
-          },
-          gestureNavigationEnabled: true,
-          backgroundColor: const Color(0x00000000),
+        child: Stack(
+          children: [
+            WebView(
+              initialUrl: Env.kiteUrl,
+              javascriptMode: JavascriptMode.unrestricted,
+              onWebViewCreated: (WebViewController webViewController) {
+                _controller.complete(webViewController);
+              },
+              onPageFinished: (String url) async {
+                LoginRequest? login = await _getLoginRequest();
+                if (login != null) {
+                  an.setLoginRequest(login);
+                  an.setLoggedIn(true);
+                  ref.read(apiProvider).login();
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop(login);
+                  }
+                }
+              },
+              gestureNavigationEnabled: true,
+              backgroundColor: const Color(0x00000000),
+            ),
+          ],
         ),
       ),
     );

@@ -1,32 +1,32 @@
-class LoginResponse {
+class APIResponse {
   final bool success;
-  final Profile data;
+  final ProfileModel data;
 
-  LoginResponse({
+  APIResponse({
     required this.success,
     required this.data,
   });
 
-  factory LoginResponse.fromJson(Map<String, dynamic> json) {
-    return LoginResponse(
+  factory APIResponse.fromJson(Map<String, dynamic> json) {
+    return APIResponse(
       success: json['success'],
-      data: Profile.fromJson(json['data']),
+      data: ProfileModel.fromJson(json['data']),
     );
   }
 }
 
-class Profile {
+class ProfileModel {
   String userId;
   String userName;
   String email;
   String phone;
   String broker;
-  List<BankAccount> bankAccounts;
+  List<BankAccountModel> bankAccounts;
   String pan;
   String userShortname;
   String avatarUrl;
 
-  Profile({
+  ProfileModel({
     required this.userId,
     required this.userName,
     required this.email,
@@ -37,8 +37,8 @@ class Profile {
     required this.userShortname,
     required this.avatarUrl,
   });
-  factory Profile.fromJson(Map<String, dynamic> json) {
-    return Profile(
+  factory ProfileModel.fromJson(Map<String, dynamic> json) {
+    return ProfileModel(
         userId: json['user_id'],
         userName: json['user_name'],
         email: json['email'],
@@ -50,23 +50,22 @@ class Profile {
         avatarUrl: json['avatar_url']);
   }
 
-  static List<BankAccount> fromJsonList(List json) {
-    return json.map((e) => BankAccount.fromJson(e)).toList();
+  static List<BankAccountModel> fromJsonList(List json) {
+    return json.map((e) => BankAccountModel.fromJson(e)).toList();
   }
 }
 
-class BankAccount {
+class BankAccountModel {
   String name;
   String branch;
   String account;
 
-  BankAccount({
+  BankAccountModel({
     required this.name,
     required this.branch,
     required this.account,
   });
-  factory BankAccount.fromJson(Map<String, dynamic> json) {
-    return BankAccount(
-        name: json['name'], branch: json['branch'], account: json['account']);
+  factory BankAccountModel.fromJson(Map<String, dynamic> json) {
+    return BankAccountModel(name: json['name'], branch: json['branch'], account: json['account']);
   }
 }
