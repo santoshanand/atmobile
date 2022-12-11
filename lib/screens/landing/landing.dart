@@ -16,7 +16,7 @@ class Landing extends ConsumerWidget {
         if (snapshot.hasData && snapshot.data == true) {
           return const HomeScreen();
         } else {
-          return LoginScreen();
+          return LoginScreenTemp();
         }
       },
     );

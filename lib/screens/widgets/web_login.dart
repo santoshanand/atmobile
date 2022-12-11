@@ -9,8 +9,7 @@ import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebLogin extends ConsumerWidget {
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
+  final Completer<WebViewController> _controller = Completer<WebViewController>();
   final cookieManager = WebviewCookieManager();
 
   WebLogin({Key? key}) : super(key: key);

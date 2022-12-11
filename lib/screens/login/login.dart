@@ -8,12 +8,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class LoginScreen extends ConsumerWidget {
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
+class LoginScreenTemp extends ConsumerWidget {
+  final Completer<WebViewController> _controller = Completer<WebViewController>();
   final cookieManager = WebviewCookieManager();
 
-  LoginScreen({Key? key}) : super(key: key);
+  LoginScreenTemp({Key? key}) : super(key: key);
 
   Future<LoginRequest> _getLoginRequest() async {
     final gotCookies = await cookieManager.getCookies(Env.kiteUrl);
