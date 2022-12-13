@@ -11,14 +11,21 @@ class LoginScreen extends ConsumerWidget {
     _openZerodhaDialog() async {
       await Navigator.of(context).push(
         MaterialPageRoute<LoginRequest?>(
-            builder: (BuildContext context) {
-              return LoginScreenTemp();
-            },
-            fullscreenDialog: true),
+          builder: (BuildContext context) {
+            return LoginScreenTemp();
+          },
+          fullscreenDialog: true,
+        ),
       );
     }
 
-    _openFyersDialog() {}
+    _openFyersDialog() {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("In progress..."),
+        ),
+      );
+    }
 
     return SafeArea(
       child: Center(

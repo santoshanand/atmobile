@@ -1,6 +1,9 @@
 import 'package:auto_trade/core/models/login_response.dart';
 import 'package:auto_trade/core/providers/api_provider.dart';
 import 'package:auto_trade/core/providers/app_provider.dart';
+import 'package:auto_trade/screens/fund/fund_screen.dart';
+import 'package:auto_trade/screens/profile/profile_screen.dart';
+import 'package:auto_trade/screens/setting/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,14 +14,24 @@ class AccountScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var _profileData = ref.watch(profileProvider);
 
+    void _goToPage(Widget widget) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => widget),
+      );
+    }
+
     void _onTap(String value) {
       debugPrint(value);
       switch (value) {
         case "funds":
+          _goToPage(const FundScreen());
           break;
         case "profile":
+          _goToPage(const ProfileScreen());
           break;
         case "settings":
+          _goToPage(const SettingScreen());
           break;
         case "logout":
           ref.read(apiProvider).logout();
@@ -62,7 +75,7 @@ class AccountScreen extends ConsumerWidget {
                 title: const Text('Logout'),
                 trailing: const Icon(Icons.logout_outlined),
                 onTap: () {
-                  _onTap('Logout');
+                  _onTap('logout');
                 },
               ),
               const ListTile(

@@ -26,10 +26,23 @@ class StockScreen extends ConsumerWidget {
       index++;
       return DataRow(
         cells: [
-          DataCell(Text(index.toString())),
-          DataCell(Text(item.tradingSymbol.toString())),
           DataCell(
-            Text(item.lotSize.toString()),
+            Text(
+              index.toString(),
+              style: const TextStyle(fontSize: 12),
+            ),
+          ),
+          DataCell(
+            Text(
+              item.tradingSymbol.toString(),
+              style: const TextStyle(fontSize: 12),
+            ),
+          ),
+          DataCell(
+            Text(
+              item.lotSize.toString(),
+              style: const TextStyle(fontSize: 12),
+            ),
           )
         ],
       );

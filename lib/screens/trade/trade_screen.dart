@@ -30,11 +30,20 @@ class TradeScreen extends ConsumerWidget {
           DataCell(
             Text(
               index.toString(),
+              style: const TextStyle(fontSize: 12),
             ),
           ),
-          DataCell(Text(item.zerodhaSymbol.toString())),
           DataCell(
-            Text(item.createdAt.toString()),
+            Text(
+              item.zerodhaSymbol.toString(),
+              style: const TextStyle(fontSize: 12),
+            ),
+          ),
+          DataCell(
+            Text(
+              item.createdAt.toString(),
+              style: const TextStyle(fontSize: 12),
+            ),
           ),
         ],
       );
@@ -61,9 +70,13 @@ class TradeScreen extends ConsumerWidget {
         ),
       );
     }, error: ((error, stackTrace) {
-      return Text(error.toString());
+      return Text(
+        error.toString(),
+      );
     }), loading: () {
-      return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+      return const Center(
+        child: CircularProgressIndicator(strokeWidth: 2),
+      );
     });
   }
 }
