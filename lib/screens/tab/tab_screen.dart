@@ -8,8 +8,22 @@ import 'package:auto_trade/screens/trade/trade_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+class TabItem {
+  Widget screen;
+  String title;
+  TabItem({
+    required this.screen,
+    required this.title,
+  });
+}
+
 class TabScreen extends ConsumerWidget {
-  static const List<Widget> _screens = <Widget>[HomeScreen(), TradeScreen(), StockScreen(), AccountOrLoginScreen()];
+  static final List<TabItem> _tabs = <TabItem>[
+    TabItem(screen: const HomeScreen(), title: 'Home'),
+    TabItem(screen: const TradeScreen(), title: 'Trades'),
+    TabItem(screen: const StockScreen(), title: 'Stocks'),
+    TabItem(screen: const AccountOrLoginScreen(), title: 'Login'),
+  ];
 
   const TabScreen({Key? key}) : super(key: key);
 
@@ -30,7 +44,23 @@ class TabScreen extends ConsumerWidget {
       }
     });
     return Scaffold(
-      body: _screens[_index],
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              floating: false,
+              pinned: false,
+              flexibleSpace: FlexibleSpaceBar(
+                centerTitle: true,
+                title: Text(
+                  (_index == 3 && _loggedIn) ? "Account" : _tabs[_index].title,
+                ),
+              ),
+            ),
+          ];
+        },
+        body: _tabs[_index].screen,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           const BottomNavigationBarItem(
@@ -38,7 +68,7 @@ class TabScreen extends ConsumerWidget {
             label: 'Home',
           ),
           const BottomNavigationBarItem(
-            icon: Icon(Icons.trending_up),
+            icon: Icon(Icons.trending_up_outlined),
             label: 'Trades',
           ),
           const BottomNavigationBarItem(
@@ -46,12 +76,12 @@ class TabScreen extends ConsumerWidget {
             label: 'Stocks',
           ),
           BottomNavigationBarItem(
-            icon: _loggedIn ? const Icon(Icons.person) : const Icon(Icons.lock),
+            icon: _loggedIn ? const Icon(Icons.person_outline) : const Icon(Icons.lock_outline),
             label: _loggedIn ? 'Account' : 'Login',
           ),
         ],
         currentIndex: _index,
-        selectedItemColor: Colors.brown,
+        selectedItemColor: Colors.deepOrange,
         unselectedItemColor: Colors.grey[600],
         showUnselectedLabels: true,
         onTap: _onItemTapped,

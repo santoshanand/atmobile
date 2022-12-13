@@ -6,8 +6,6 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const SafeArea(
-      child: Text("Home screen"),
-    );
+    return const SingleChildScrollView(child: Text("Home screen"));
   }
 }

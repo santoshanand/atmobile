@@ -39,32 +39,31 @@ class LoginScreenTemp extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        toolbarOpacity: .5,
       ),
       body: SafeArea(
-        child: Stack(
-          children: [
-            WebView(
-              initialUrl: Env.kiteUrl,
-              javascriptMode: JavascriptMode.unrestricted,
-              onWebViewCreated: (WebViewController webViewController) {
-                _controller.complete(webViewController);
-              },
-              onPageFinished: (String url) async {
-                LoginRequest? login = await _getLoginRequest();
-                if (login != null) {
-                  an.setLoginRequest(login);
-                  an.setLoggedIn(true);
-                  ref.read(apiProvider).login();
-                  if (Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop(login);
-                  }
+        child: WebView(
+          initialUrl: Env.kiteUrl,
+          javascriptMode: JavascriptMode.unrestricted,
+          onWebViewCreated: (WebViewController webViewController) {
+            _controller.complete(webViewController);
+          },
+          onPageFinished: (String url) async {
+            try {
+              LoginRequest? login = await _getLoginRequest();
+              if (login != null && login.token != "") {
+                if (Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop(login);
                 }
-              },
-              gestureNavigationEnabled: true,
-              backgroundColor: const Color(0x00000000),
-            ),
-          ],
+                an.setLoginRequest(login);
+                await ref.read(apiProvider).login();
+                an.setLoggedIn(true);
+              }
+            } catch (e) {
+              debugPrint(e.toString());
+            }
+          },
+          gestureNavigationEnabled: true,
+          backgroundColor: const Color(0x00000000),
         ),
       ),
     );
