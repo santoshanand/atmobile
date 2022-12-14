@@ -61,11 +61,22 @@ class TradeScreen extends ConsumerWidget {
             sp = ref.refresh(tradesProvider);
           },
           child: SingleChildScrollView(
-            child: DataTable(
-              columns: _createColumns(),
-              rows: _createRows(items),
-              sortColumnIndex: 1,
-            ),
+            child: (items.isNotEmpty)
+                ? DataTable(
+                    columns: _createColumns(),
+                    rows: _createRows(items),
+                    sortColumnIndex: 1,
+                  )
+                : SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height - 100,
+                    child: Center(
+                      child: Text(
+                        "No Trades",
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                    ),
+                  ),
           ),
         ),
       );
