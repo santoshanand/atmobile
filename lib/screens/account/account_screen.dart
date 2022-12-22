@@ -21,6 +21,11 @@ class AccountScreen extends ConsumerWidget {
       );
     }
 
+    Future<void> _logout() async {
+      await ref.read(apiProvider).logout();
+      ref.read(appProvider).setLoggedIn(false);
+    }
+
     void _onTap(String value) {
       debugPrint(value);
       switch (value) {
@@ -34,8 +39,7 @@ class AccountScreen extends ConsumerWidget {
           _goToPage(const SettingScreen());
           break;
         case "logout":
-          ref.read(apiProvider).logout();
-          ref.read(appProvider).setLoggedIn(false);
+          _logout();
           break;
         default:
       }
@@ -87,7 +91,7 @@ class AccountScreen extends ConsumerWidget {
             ]).toList(),
           );
         }, error: (Object error, StackTrace stackTrace) {
-          ref.refresh(apiProvider).logout();
+          _logout();
           return Center(
             child: Text('Ooops! $error'),
           );

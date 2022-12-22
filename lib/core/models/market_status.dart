@@ -1,4 +1,4 @@
-class MarketState {
+class MarketStatusModel {
   String market;
   String marketStatus;
   String tradeDate;
@@ -8,7 +8,7 @@ class MarketState {
   dynamic percentChange;
   String marketStatusMessage;
 
-  MarketState({
+  MarketStatusModel({
     required this.market,
     required this.marketStatus,
     required this.tradeDate,
@@ -19,8 +19,8 @@ class MarketState {
     required this.marketStatusMessage,
   });
 
-  static MarketState fromJson(Map<String, dynamic> data) {
-    return MarketState(
+  static MarketStatusModel fromJson(Map<String, dynamic> data) {
+    return MarketStatusModel(
       market: data['market'],
       marketStatus: data['marketStatus'],
       tradeDate: data['tradeDate'],
