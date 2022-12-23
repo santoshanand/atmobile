@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final apiProvider = Provider<APIService>((ref) => APIService());
 
-final loginProvider = FutureProvider<ProfileModel?>((_ref) {
+final loginsProvider = FutureProvider<ProfileModel?>((_ref) {
   return _ref.watch(apiProvider).login();
 });
 
@@ -20,4 +20,8 @@ final stocksProvider = FutureProvider<List<StockModel>>((_ref) {
 
 final tradesProvider = FutureProvider<List<TradeModel>>((_ref) {
   return _ref.watch(apiProvider).getTrades();
+});
+
+final checkLogin = FutureProvider<bool>((_ref) async {
+  return await _ref.watch(apiProvider).checkLogin();
 });

@@ -4,6 +4,7 @@ import 'package:auto_trade/core/providers/app_provider.dart';
 import 'package:auto_trade/screens/fund/fund_screen.dart';
 import 'package:auto_trade/screens/profile/profile_screen.dart';
 import 'package:auto_trade/screens/setting/setting_screen.dart';
+import 'package:auto_trade/shared/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,8 +23,8 @@ class AccountScreen extends ConsumerWidget {
     }
 
     Future<void> _logout() async {
-      await ref.read(apiProvider).logout();
       ref.read(appProvider).setLoggedIn(false);
+      await ref.read(apiProvider).logout();
     }
 
     void _onTap(String value) {
@@ -96,9 +97,7 @@ class AccountScreen extends ConsumerWidget {
             child: Text('Ooops! $error'),
           );
         }, loading: () {
-          return const Center(
-            child: CircularProgressIndicator(strokeWidth: 2),
-          );
+          return const Loader();
         }),
       ),
     );

@@ -1,5 +1,5 @@
 import 'package:auto_trade/core/theme/app_theme.dart';
-import 'package:auto_trade/screens/tab/tab_screen.dart';
+import 'package:auto_trade/screens/landing/landing.dart';
 import 'package:flutter/material.dart';
 
 class AutoTrade extends StatelessWidget {
@@ -10,7 +10,7 @@ class AutoTrade extends StatelessWidget {
       title: 'Auto Trade',
       theme: applicationTheme,
       debugShowCheckedModeBanner: false,
-      home: const TabScreen(),
+      home: const LandingScreen(),
     );
   }
 }

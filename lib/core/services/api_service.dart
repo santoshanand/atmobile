@@ -14,11 +14,9 @@ class APIService {
   Future<ProfileModel?> login() async {
     String loginUrl = '$_endpoint/login';
     LoginRequest? loginReq = await _getLoginRequest();
-
     if (loginReq == null) {
       return null;
     }
-
     try {
       Response res = await Dio().post(loginUrl, data: {'token': loginReq.token, 'user_id': loginReq.userId});
       if (res.statusCode != 200) {
@@ -93,6 +91,14 @@ class APIService {
 
   Future<void> _clearCookies() async {
     await _cookieManager.clearCookies();
+  }
+
+  Future<bool> checkLogin() async {
+    var cookies = await _getLoginRequest();
+    if (cookies == null) {
+      return false;
+    }
+    return true;
   }
 
   Future<LoginRequest?> _getLoginRequest() async {

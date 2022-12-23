@@ -1,5 +1,6 @@
 import 'package:auto_trade/core/models/trade_model.dart';
 import 'package:auto_trade/core/providers/api_provider.dart';
+import 'package:auto_trade/shared/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -85,9 +86,7 @@ class TradeScreen extends ConsumerWidget {
         error.toString(),
       );
     }), loading: () {
-      return const Center(
-        child: CircularProgressIndicator(strokeWidth: 2),
-      );
+      return const Loader();
     });
   }
 }
