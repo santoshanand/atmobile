@@ -12,7 +12,7 @@ class FABBottomAppBar extends StatefulWidget {
     required this.items,
     required this.centerItemText,
     this.height = 60.0,
-    this.iconSize = 24.0,
+    this.iconSize = 22.0,
     required this.backgroundColor,
     required this.color,
     required this.selectedColor,
@@ -104,9 +104,12 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Icon(item.iconData, color: color, size: widget.iconSize),
+                const SizedBox(
+                  height: 3,
+                ),
                 Text(
                   item.text,
-                  style: TextStyle(color: color),
+                  style: TextStyle(color: color, fontSize: 12),
                 )
               ],
             ),
