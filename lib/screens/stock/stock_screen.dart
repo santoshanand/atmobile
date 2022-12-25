@@ -1,10 +1,7 @@
 import 'package:auto_trade/core/models/stock_model.dart';
-import 'package:auto_trade/core/providers/api_provider.dart';
-import 'package:auto_trade/shared/loader.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class StockScreen extends ConsumerWidget {
+class StockScreen extends StatelessWidget {
   const StockScreen({Key? key}) : super(key: key);
 
   List<DataColumn> _createColumns() {
@@ -51,25 +48,16 @@ class StockScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var sp = ref.watch(stocksProvider);
+  Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async {
-        sp = ref.refresh(stocksProvider);
-      },
-      child: sp.when(data: (items) {
-        return SingleChildScrollView(
-          child: DataTable(
-            columns: _createColumns(),
-            rows: _createRows(items),
-            sortColumnIndex: 1,
-          ),
-        );
-      }, error: ((error, stackTrace) {
-        return Text(error.toString());
-      }), loading: () {
-        return const Loader();
-      }),
+      onRefresh: () async {},
+      child: SingleChildScrollView(
+        child: DataTable(
+          columns: _createColumns(),
+          rows: _createRows([]),
+          sortColumnIndex: 1,
+        ),
+      ),
     );
   }
 }

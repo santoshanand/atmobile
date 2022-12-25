@@ -1,4 +1,6 @@
-import 'package:auto_trade/core/models/login_response.dart';
+import 'package:auto_trade/core/models/login_model.dart';
+import 'package:auto_trade/core/models/margin_model.dart';
+import 'package:auto_trade/core/models/profile_model.dart';
 import 'package:auto_trade/core/models/stock_model.dart';
 import 'package:auto_trade/core/models/trade_model.dart';
 import 'package:auto_trade/utils/env.dart';
@@ -9,21 +11,56 @@ import 'package:dio/dio.dart';
 
 class APIService {
   final String _endpoint = Env.apiUrl;
+  final String _kiteUrl = Env.kiteUrl;
   final _cookieManager = WebviewCookieManager();
 
-  Future<ProfileModel?> login() async {
-    String loginUrl = '$_endpoint/login';
+  final String _loginUrl = "/login";
+  final String _profileUrl = "/profile";
+  final String _stocksUrl = '/stocks';
+  final String _tradesUrl = '/trades';
+  final String _stopUrl = '/stop';
+  final String _marginUrl = '/margins';
+
+  Dio get _dio {
+    return Dio(
+      BaseOptions(
+        connectTimeout: 30 * 1000,
+        receiveTimeout: 15 * 1000,
+        baseUrl: _endpoint,
+      ),
+    );
+  }
+
+  Future<MarginModel?> margins() async {
     LoginRequest? loginReq = await _getLoginRequest();
     if (loginReq == null) {
       return null;
     }
     try {
-      Response res = await Dio().post(loginUrl, data: {'token': loginReq.token, 'user_id': loginReq.userId});
+      Response res = await _dio.post(_marginUrl, data: {'token': loginReq.token, 'user_id': loginReq.userId});
       if (res.statusCode != 200) {
-        _clearCookies();
+        logout();
         return null;
       }
-      APIResponse apiRes = APIResponse.fromJson(res.data);
+      MarginResponse apiRes = MarginResponse.fromJson(res.data);
+      return apiRes.data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<LoginModel?> login() async {
+    LoginRequest? loginReq = await _getLoginRequest();
+    if (loginReq == null) {
+      return null;
+    }
+    try {
+      Response res = await _dio.post(_loginUrl, data: {'token': loginReq.token, 'user_id': loginReq.userId});
+      if (res.statusCode != 200) {
+        logout();
+        return null;
+      }
+      LoginResponse apiRes = LoginResponse.fromJson(res.data);
       return apiRes.data;
     } catch (e) {
       return null;
@@ -31,20 +68,17 @@ class APIService {
   }
 
   Future<ProfileModel> profile() async {
-    String loginUrl = '$_endpoint/profile';
     LoginRequest? loginReq = await _getLoginRequest();
-
     if (loginReq == null) {
-      return Future.error('login request is null');
+      return Future.error('profile request is null');
     }
-
     try {
-      Response res = await Dio().post(loginUrl, data: {'token': loginReq.token, 'user_id': loginReq.userId});
+      Response res = await _dio.post(_profileUrl, data: {'token': loginReq.token, 'user_id': loginReq.userId});
       if (res.statusCode != 200) {
-        _clearCookies();
+        logout();
         return Future.error(res.data);
       }
-      APIResponse apiRes = APIResponse.fromJson(res.data);
+      ProfileResponse apiRes = ProfileResponse.fromJson(res.data);
       return apiRes.data;
     } catch (e) {
       return Future.error('exception: $e');
@@ -52,10 +86,8 @@ class APIService {
   }
 
   Future<List<StockModel>> getStocks() async {
-    String url = '$_endpoint/stocks';
-
     try {
-      Response res = await Dio().get(url);
+      Response res = await _dio.get(_stocksUrl);
       if (res.statusCode != 200) {
         return Future.error(res.data);
       }
@@ -67,14 +99,12 @@ class APIService {
   }
 
   Future<List<TradeModel>> getTrades() async {
-    String url = '$_endpoint/trades';
-
     try {
       Map<String, dynamic> queryParameters = <String, dynamic>{};
       DateTime today = DateTime.now();
       String dateStr = "${today.year}-${today.month}-${today.day}";
       queryParameters['date'] = dateStr;
-      Response res = await Dio().get(url, queryParameters: queryParameters);
+      Response res = await _dio.get(_tradesUrl, queryParameters: queryParameters);
       if (res.statusCode != 200) {
         return Future.error(res.data);
       }
@@ -86,23 +116,27 @@ class APIService {
   }
 
   Future<void> logout() async {
-    await _clearCookies();
-  }
-
-  Future<void> _clearCookies() async {
+    await stopTrading(true);
     await _cookieManager.clearCookies();
   }
 
-  Future<bool> checkLogin() async {
-    var cookies = await _getLoginRequest();
-    if (cookies == null) {
-      return false;
+  Future<void> stopTrading(bool value) async {
+    LoginRequest? loginReq = await _getLoginRequest();
+    if (loginReq == null) {
+      return Future.error('stop trading request is null');
     }
-    return true;
+    try {
+      Response res = await _dio.post(_stopUrl, data: {'token': loginReq.token, 'user_id': loginReq.userId, 'stop': value});
+      if (res.statusCode != 200) {
+        return Future.error(res.data);
+      }
+    } catch (e) {
+      return Future.error('exception: $e');
+    }
   }
 
   Future<LoginRequest?> _getLoginRequest() async {
-    final gotCookies = await _cookieManager.getCookies(Env.kiteUrl);
+    final gotCookies = await _cookieManager.getCookies(_kiteUrl);
     LoginRequest loginReq = LoginRequest(token: "", userId: "");
     for (var item in gotCookies) {
       if (item.name == "enctoken") {

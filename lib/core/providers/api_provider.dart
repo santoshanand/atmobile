@@ -1,27 +1,78 @@
-import 'package:auto_trade/core/models/login_response.dart';
-import 'package:auto_trade/core/models/stock_model.dart';
-import 'package:auto_trade/core/models/trade_model.dart';
+import 'package:auto_trade/core/models/login_model.dart';
+import 'package:auto_trade/core/models/margin_model.dart';
+import 'package:auto_trade/core/models/profile_model.dart';
 import 'package:auto_trade/core/services/api_service.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart';
 
-final apiProvider = Provider<APIService>((ref) => APIService());
+class ServiceNotifier with ChangeNotifier {
+  bool loginFeching = false;
+  bool profileFeching = false;
+  bool marginFeching = false;
+  bool stoppingTrading = false;
 
-final loginsProvider = FutureProvider<ProfileModel?>((_ref) {
-  return _ref.watch(apiProvider).login();
-});
+  bool loggingOut = false;
+  bool loggedIn = false;
 
-final profileProvider = FutureProvider<ProfileModel>((_ref) {
-  return _ref.watch(apiProvider).profile();
-});
+  final APIService _api = APIService();
 
-final stocksProvider = FutureProvider<List<StockModel>>((_ref) {
-  return _ref.watch(apiProvider).getStocks();
-});
+  ProfileModel? profileModel;
+  LoginModel? loginModel;
+  MarginModel? marginModel;
 
-final tradesProvider = FutureProvider<List<TradeModel>>((_ref) {
-  return _ref.watch(apiProvider).getTrades();
-});
+  ServiceNotifier(LoginModel? loginModel) {
+    loginModel = loginModel;
+    if (loginModel != null) {
+      loggedIn = true;
+    }
+  }
+  void login() async {
+    loginFeching = true;
+    loginModel = await _api.login();
+    if (loginModel != null) {
+      loggedIn = true;
+    }
+    loginFeching = false;
+    notifyListeners();
+  }
 
-final checkLogin = FutureProvider<bool>((_ref) async {
-  return await _ref.watch(apiProvider).checkLogin();
-});
+  void profile() async {
+    profileFeching = true;
+    profileModel = await _api.profile();
+    if (profileModel == null) {
+      logout();
+    }
+    profileFeching = false;
+    notifyListeners();
+  }
+
+  void logout() async {
+    loggingOut = true;
+    await _api.logout();
+    _resetProperties();
+    loggingOut = false;
+    notifyListeners();
+  }
+
+  void stopTrading(bool value) async {
+    stoppingTrading = true;
+    await _api.stopTrading(value);
+    stoppingTrading = false;
+    notifyListeners();
+  }
+
+  void margin() async {
+    marginFeching = true;
+    marginModel = await _api.margins();
+    marginFeching = false;
+    notifyListeners();
+  }
+
+  void _resetProperties() {
+    loggedIn = false;
+    profileFeching = false;
+    loginFeching = false;
+    loggingOut = false;
+    profileModel = null;
+    loginModel = null;
+  }
+}

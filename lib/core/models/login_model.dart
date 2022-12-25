@@ -1,21 +1,21 @@
-class APIResponse {
+class LoginResponse {
   final bool success;
-  final ProfileModel data;
+  final LoginModel data;
 
-  APIResponse({
+  LoginResponse({
     required this.success,
     required this.data,
   });
 
-  factory APIResponse.fromJson(Map<String, dynamic> json) {
-    return APIResponse(
+  factory LoginResponse.fromJson(Map<String, dynamic> json) {
+    return LoginResponse(
       success: json['success'],
-      data: ProfileModel.fromJson(json['data']),
+      data: LoginModel.fromJson(json['data']),
     );
   }
 }
 
-class ProfileModel {
+class LoginModel {
   String userId;
   String userName;
   String email;
@@ -26,7 +26,7 @@ class ProfileModel {
   String userShortname;
   String avatarUrl;
 
-  ProfileModel({
+  LoginModel({
     required this.userId,
     required this.userName,
     required this.email,
@@ -37,8 +37,8 @@ class ProfileModel {
     required this.userShortname,
     required this.avatarUrl,
   });
-  factory ProfileModel.fromJson(Map<String, dynamic> json) {
-    return ProfileModel(
+  factory LoginModel.fromJson(Map<String, dynamic> json) {
+    return LoginModel(
         userId: json['user_id'],
         userName: json['user_name'],
         email: json['email'],

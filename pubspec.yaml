@@ -37,10 +37,12 @@ dependencies:
   flutter_dotenv: ^5.0.2
   webview_flutter: ^3.0.4
   webview_cookie_manager: ^2.0.6
-  flutter_riverpod: ^2.1.1
   dio: ^4.0.6
   ionicons: ^0.2.1
   connection_notifier: ^1.0.1
+  provider: ^6.0.5
+  skeletons: ^0.0.3
+  intl: ^0.18.0
   
 dev_dependencies:
   flutter_test:

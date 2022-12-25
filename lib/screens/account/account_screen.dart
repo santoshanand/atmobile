@@ -1,20 +1,35 @@
 import 'package:auto_trade/core/providers/api_provider.dart';
-import 'package:auto_trade/core/providers/app_provider.dart';
 import 'package:auto_trade/screens/fund/fund_screen.dart';
 import 'package:auto_trade/screens/profile/profile_screen.dart';
 import 'package:auto_trade/screens/setting/setting_screen.dart';
-import 'package:auto_trade/shared/loader.dart';
+import 'package:auto_trade/shared/auto_trade_logo.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:provider/provider.dart';
 
-class AccountScreen extends ConsumerWidget {
+class AccountScreen extends StatelessWidget {
   const AccountScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var _profileData = ref.watch(profileProvider);
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: RefreshIndicator(
+        onRefresh: () async {
+          context.read<ServiceNotifier>().profile();
+        },
+        child: const _ProfileWidget(),
+      ),
+    );
+  }
+}
 
+class _ProfileWidget extends StatelessWidget {
+  const _ProfileWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     void _goToPage(Widget widget) {
       Navigator.push(
         context,
@@ -23,8 +38,7 @@ class AccountScreen extends ConsumerWidget {
     }
 
     Future<void> _logout() async {
-      ref.read(appProvider).setLoggedIn(false);
-      await ref.read(apiProvider).logout();
+      Provider.of<ServiceNotifier>(context, listen: false).logout();
     }
 
     void _onTap(String value) {
@@ -46,82 +60,62 @@ class AccountScreen extends ConsumerWidget {
       }
     }
 
-    return SafeArea(
-      child: RefreshIndicator(
-        onRefresh: () async {
-          _profileData = ref.refresh(profileProvider);
-        },
-        child: _profileData.when(data: (_profile) {
-          return Column(
-            children: [
-              Expanded(
-                child: ListView(
-                  children: ListTile.divideTiles(context: context, tiles: [
-                    const _ProfileCard(),
-                    const _DetailsWidget(),
-                    ListTile(
-                      title: const Text('Support'),
-                      trailing: const Icon(Icons.help_outline_outlined),
-                      onTap: () {
-                        _onTap('');
-                      },
-                    ),
-                    ListTile(
-                      title: const Text('Contact'),
-                      trailing: const Icon(Ionicons.call_outline),
-                      onTap: () {
-                        _onTap('');
-                      },
-                    ),
-                    ListTile(
-                      title: const Text('Logout'),
-                      trailing: const Icon(Ionicons.log_out_outline),
-                      onTap: () {
-                        _onTap('logout');
-                      },
-                    ),
-                    const ListTile(
-                      title: Text(
-                        'Version 0.0.1',
-                        style: TextStyle(fontWeight: FontWeight.w200),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 100,
-                      child: Center(
-                        child: Text(
-                          "AUTO TRADE",
-                          style: TextStyle(fontSize: 24, color: Colors.grey),
-                        ),
-                      ),
-                    )
-                  ]).toList(),
+    return Column(
+      children: [
+        Expanded(
+          child: ListView(
+            children: ListTile.divideTiles(context: context, tiles: [
+              const _ProfileCard(),
+              const _DetailsWidget(),
+              ListTile(
+                title: const Text('Support'),
+                trailing: const Icon(Icons.help_outline_outlined),
+                onTap: () {
+                  _onTap('');
+                },
+              ),
+              ListTile(
+                title: const Text('Contact'),
+                trailing: const Icon(Ionicons.call_outline),
+                onTap: () {
+                  _onTap('');
+                },
+              ),
+              ListTile(
+                title: const Text('Logout'),
+                trailing: const Icon(Ionicons.log_out_outline),
+                onTap: () {
+                  _onTap('logout');
+                },
+              ),
+              const ListTile(
+                title: Text(
+                  'Version 0.0.1',
+                  style: TextStyle(fontWeight: FontWeight.w200),
                 ),
               ),
-            ],
-          );
-        }, error: (Object error, StackTrace stackTrace) {
-          _logout();
-          return Center(
-            child: Text('Ooops! $error'),
-          );
-        }, loading: () {
-          return const Loader();
-        }),
-      ),
+              const SizedBox(
+                height: 100,
+                child: Center(
+                  child: AutoTradeLogo(),
+                ),
+              )
+            ]).toList(),
+          ),
+        ),
+      ],
     );
   }
 }
 
-class _DetailsWidget extends ConsumerWidget {
+class _DetailsWidget extends StatelessWidget {
   const _DetailsWidget({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var profile = ref.watch(appProvider.notifier).profile;
-
+  Widget build(BuildContext context) {
+    var profile = Provider.of<ServiceNotifier>(context).profileModel;
     if (profile == null) {
       return Container();
     }
@@ -198,15 +192,14 @@ class _DetailsItem extends StatelessWidget {
   }
 }
 
-class _ProfileCard extends ConsumerWidget {
+class _ProfileCard extends StatelessWidget {
   const _ProfileCard({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var profile = ref.watch(appProvider.notifier).profile;
-
+  Widget build(BuildContext context) {
+    var profile = Provider.of<ServiceNotifier>(context).profileModel;
     if (profile == null) {
       return Container();
     }
@@ -229,7 +222,7 @@ class _ProfileCard extends ConsumerWidget {
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
             Flex(
               direction: Axis.vertical,
@@ -240,7 +233,7 @@ class _ProfileCard extends ConsumerWidget {
                   style: Theme.of(context).textTheme.headline6,
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 6,
                 ),
                 Text(
                   profile.email,

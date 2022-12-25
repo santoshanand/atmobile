@@ -1,10 +1,7 @@
 import 'package:auto_trade/core/models/trade_model.dart';
-import 'package:auto_trade/core/providers/api_provider.dart';
-import 'package:auto_trade/shared/loader.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class TradeScreen extends ConsumerWidget {
+class TradeScreen extends StatelessWidget {
   const TradeScreen({Key? key}) : super(key: key);
 
   List<DataColumn> _createColumns() {
@@ -52,41 +49,21 @@ class TradeScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var sp = ref.watch(tradesProvider);
-    return sp.when(data: (items) {
-      return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: RefreshIndicator(
-          onRefresh: () async {
-            sp = ref.refresh(tradesProvider);
-          },
-          child: SingleChildScrollView(
-            child: (items.isNotEmpty)
-                ? DataTable(
-                    columns: _createColumns(),
-                    rows: _createRows(items),
-                    sortColumnIndex: 1,
-                  )
-                : SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height - 100,
-                    child: Center(
-                      child: Text(
-                        "No Trades",
-                        style: Theme.of(context).textTheme.caption,
-                      ),
-                    ),
-                  ),
-          ),
-        ),
-      );
-    }, error: ((error, stackTrace) {
-      return Text(
-        error.toString(),
-      );
-    }), loading: () {
-      return const Loader();
-    });
+  Widget build(BuildContext context) {
+    // var sp = ref.watch(tradesProvider);
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: RefreshIndicator(
+        onRefresh: () async {
+          // sp = ref.refresh(tradesProvider);
+        },
+        child: SingleChildScrollView(
+            child: DataTable(
+          columns: _createColumns(),
+          rows: _createRows([]),
+          sortColumnIndex: 1,
+        )),
+      ),
+    );
   }
 }
