@@ -14,115 +14,12 @@ class HomeScreen extends ConsumerWidget {
         var pr = await ref.refresh(profileProvider.future);
         ref.read(appProvider.notifier).setProfile(pr);
       },
-      child: Padding(
-        padding: const EdgeInsets.only(top: 0, left: 8, right: 8, bottom: 8),
-        child: ListView(
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 24.0),
-              child: Header(),
-            ),
-            const SizedBox(
-              height: 24,
-            ),
-
-            const Amount(),
-
-            const SizedBox(
-              height: 8,
-            ),
-            const LiveView(),
-
-            const SizedBox(
-              height: 8,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "PROFIT / LOSS",
-                  style: TextStyle(color: Colors.black87),
-                ),
-                TextButton(
-                  child: const Text(
-                    "See more",
-                    style: TextStyle(fontWeight: FontWeight.w400),
-                  ),
-                  onPressed: () {},
-                )
-              ],
-            ),
-
-            // list view
-
-            Column(
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(color: Colors.black12),
-                      top: BorderSide(color: Colors.black12),
-                    ),
-                  ),
-                  child: const ListTile(
-                    title: Text(
-                      'NIFTY',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    subtitle: Text(
-                      "23-12-2022",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    trailing: Text(
-                      "+200",
-                      style: TextStyle(fontSize: 12, color: Colors.green),
-                    ),
-                  ),
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(color: Colors.black12),
-                    ),
-                  ),
-                  child: const ListTile(
-                    title: Text(
-                      'BANKNIFTY',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    subtitle: Text(
-                      "22-12-2022",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    trailing: Text(
-                      "+1500",
-                      style: TextStyle(fontSize: 12, color: Colors.green),
-                    ),
-                  ),
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(color: Colors.black12),
-                    ),
-                  ),
-                  child: const ListTile(
-                    title: Text(
-                      'FINNIFTY',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    subtitle: Text(
-                      "21-12-2022",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    trailing: Text(
-                      "-10",
-                      style: TextStyle(fontSize: 12, color: Colors.red),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: const [
+            _HeaderView(),
+            _BodyView(),
           ],
         ),
       ),
@@ -130,8 +27,66 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-class LiveView extends StatelessWidget {
-  const LiveView({
+class _BodyView extends StatelessWidget {
+  const _BodyView({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ListView(
+        children: const [
+          SizedBox(
+            height: 8,
+          ),
+          _Amount(),
+          SizedBox(
+            height: 8,
+          ),
+          _LiveView(),
+          SizedBox(
+            height: 8,
+          ),
+          _ProfitLossHeader(),
+          SizedBox(
+            height: 8,
+          ),
+          _ProfitLoss(),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProfitLossHeader extends StatelessWidget {
+  const _ProfitLossHeader({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          "Profit / Loss",
+          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+        ),
+        TextButton(
+          child: const Text(
+            "See more",
+            style: TextStyle(fontWeight: FontWeight.w400),
+          ),
+          onPressed: () {},
+        )
+      ],
+    );
+  }
+}
+
+class _ProfitLoss extends StatelessWidget {
+  const _ProfitLoss({
     Key? key,
   }) : super(key: key);
 
@@ -139,25 +94,91 @@ class LiveView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   children: [
-        //     const Text(
-        //       "MARKET STATUS",
-        //       style: TextStyle(color: Colors.black54),
-        //     ),
+        Container(
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: Colors.black12),
+              top: BorderSide(color: Colors.black12),
+            ),
+          ),
+          child: const ListTile(
+            title: Text(
+              'NIFTY',
+              style: TextStyle(fontSize: 14),
+            ),
+            subtitle: Text(
+              "23-12-2022",
+              style: TextStyle(fontSize: 12),
+            ),
+            trailing: Text(
+              "+200",
+              style: TextStyle(fontSize: 12, color: Colors.green),
+            ),
+          ),
+        ),
+        Container(
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: Colors.black12),
+            ),
+          ),
+          child: const ListTile(
+            title: Text(
+              'BANKNIFTY',
+              style: TextStyle(fontSize: 14),
+            ),
+            subtitle: Text(
+              "22-12-2022",
+              style: TextStyle(fontSize: 12),
+            ),
+            trailing: Text(
+              "+1500",
+              style: TextStyle(fontSize: 12, color: Colors.green),
+            ),
+          ),
+        ),
+        Container(
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: Colors.black12),
+            ),
+          ),
+          child: const ListTile(
+            title: Text(
+              'FINNIFTY',
+              style: TextStyle(fontSize: 14),
+            ),
+            subtitle: Text(
+              "21-12-2022",
+              style: TextStyle(fontSize: 12),
+            ),
+            trailing: Text(
+              "-10",
+              style: TextStyle(fontSize: 12, color: Colors.red),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
 
-        //   ],
-        // ),
-        // const SizedBox(
-        //   height: 8,
-        // ),
+class _LiveView extends StatelessWidget {
+  const _LiveView({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
         Row(
           children: [
             Flexible(
               flex: 1,
               fit: FlexFit.tight,
               child: Card(
+                margin: const EdgeInsets.all(0),
                 child: Container(
                   padding: const EdgeInsets.only(top: 4, bottom: 4, left: 34, right: 34),
                   height: 60,
@@ -228,8 +249,8 @@ class LiveView extends StatelessWidget {
   }
 }
 
-class Amount extends StatelessWidget {
-  const Amount({
+class _Amount extends StatelessWidget {
+  const _Amount({
     Key? key,
   }) : super(key: key);
 
@@ -283,8 +304,8 @@ class Amount extends StatelessWidget {
   }
 }
 
-class Header extends ConsumerWidget {
-  const Header({
+class _HeaderView extends ConsumerWidget {
+  const _HeaderView({
     Key? key,
   }) : super(key: key);
 
@@ -292,57 +313,143 @@ class Header extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var profile = ref.watch(appProvider).profile;
     if (profile == null) return Container();
-    return SizedBox(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 52,
-                height: 52,
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  image: DecorationImage(
-                    image: NetworkImage(profile.avatarUrl),
-                  ),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(8),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 12,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Happy Trading",
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+      child: SizedBox(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    image: DecorationImage(
+                      image: NetworkImage(profile.avatarUrl),
                     ),
-                    const SizedBox(
-                      height: 4,
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(8),
                     ),
-                    Text(profile.userShortname),
-                  ],
+                  ),
                 ),
-              )
-            ],
-          ),
-          IconButton(
-            icon: const Icon(
-              Ionicons.settings_outline,
-              color: Colors.grey,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 12,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Happy Trading",
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      Text(profile.userShortname),
+                    ],
+                  ),
+                )
+              ],
             ),
-            tooltip: 'Open Settings',
-            onPressed: () {},
-          ),
-        ],
+            IconButton(
+              icon: const Icon(
+                Ionicons.settings_outline,
+                color: Colors.grey,
+              ),
+              tooltip: 'Open Settings',
+              onPressed: () {
+                showModalBottomSheet<void>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const _SettingsWidget();
+                  },
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingsWidget extends ConsumerStatefulWidget {
+  const _SettingsWidget({
+    Key? key,
+  }) : super(key: key);
+  @override
+  _SettingsWidgetState createState() => _SettingsWidgetState();
+}
+
+class _SettingsWidgetState extends ConsumerState<_SettingsWidget> {
+  bool stopTrading = false;
+  double profitValue = 1500;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 300,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                'Settings',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                children: ListTile.divideTiles(context: context, tiles: [
+                  ListTile(
+                    title: const Text('Stop Trading'),
+                    trailing: Switch(
+                      onChanged: (value) {
+                        setState(() {
+                          stopTrading = value;
+                        });
+                      },
+                      value: stopTrading,
+                    ),
+                  ),
+                  ListTile(
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(left: 20, top: 20),
+                          child: Text("Profit"),
+                        ),
+                        Slider(
+                          value: profitValue,
+                          max: 1500,
+                          divisions: 4,
+                          min: 300,
+                          label: profitValue.round().toString(),
+                          onChanged: (double value) {
+                            setState(() {
+                              profitValue = value;
+                            });
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                ]).toList(),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
