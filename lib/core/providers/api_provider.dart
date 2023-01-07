@@ -1,3 +1,4 @@
+import 'package:auto_trade/core/models/home_model.dart';
 import 'package:auto_trade/core/models/login_model.dart';
 import 'package:auto_trade/core/models/margin_model.dart';
 import 'package:auto_trade/core/models/profile_model.dart';
@@ -5,46 +6,52 @@ import 'package:auto_trade/core/services/api_service.dart';
 import 'package:flutter/material.dart';
 
 class ServiceNotifier with ChangeNotifier {
-  bool loginFeching = false;
-  bool profileFeching = false;
-  bool marginFeching = false;
+  bool loginFetching = false;
+  bool profileFetching = false;
+  bool marginFetching = false;
   bool stoppingTrading = false;
+  bool homeDataFetching = false;
 
   bool loggingOut = false;
-  bool loggedIn = false;
+  bool loggedIn = true;
 
   final APIService _api = APIService();
 
   ProfileModel? profileModel;
   LoginModel? loginModel;
   MarginModel? marginModel;
+  HomeModel? homeModel;
 
-  ServiceNotifier(LoginModel? loginModel) {
-    loginModel = loginModel;
-    if (loginModel != null) {
-      loggedIn = true;
-    }
-  }
-  void login() async {
-    loginFeching = true;
+  Future<LoginModel?> login() async {
+    loginFetching = true;
     loginModel = await _api.login();
     if (loginModel != null) {
       loggedIn = true;
+    } else {
+      loggedIn = false;
     }
-    loginFeching = false;
+    loginFetching = false;
     notifyListeners();
+    return loginModel;
   }
 
   void profile() async {
-    profileFeching = true;
-    profileModel = await _api.profile();
-    if (profileModel == null) {
+    profileFetching = true;
+    try {
+      profileModel = await _api.profile();
+    } catch (e) {
       logout();
     }
-    profileFeching = false;
+    profileFetching = false;
     notifyListeners();
   }
 
+  void homeData() async {
+    homeDataFetching = true;
+    homeModel = await _api.homeData();
+    homeDataFetching = false;
+    notifyListeners();
+  }
   void logout() async {
     loggingOut = true;
     await _api.logout();
@@ -61,16 +68,16 @@ class ServiceNotifier with ChangeNotifier {
   }
 
   void margin() async {
-    marginFeching = true;
+    marginFetching = true;
     marginModel = await _api.margins();
-    marginFeching = false;
+    marginFetching = false;
     notifyListeners();
   }
 
   void _resetProperties() {
     loggedIn = false;
-    profileFeching = false;
-    loginFeching = false;
+    profileFetching = false;
+    loginFetching = false;
     loggingOut = false;
     profileModel = null;
     loginModel = null;

@@ -1,4 +1,5 @@
 import 'package:auto_trade/core/providers/api_provider.dart';
+import 'package:auto_trade/core/theme/app_theme.dart';
 import 'package:auto_trade/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
@@ -16,22 +17,20 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<ServiceNotifier>().profile();
-    context.read<ServiceNotifier>().margin();
+    // context.read<ServiceNotifier>().profile();
+    // context.read<ServiceNotifier>().margin();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // _paymentDialog(context);
-      _launchURL();
+      // _makePayment();
     });
   }
-
-  void _launchURL() {}
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        context.read<ServiceNotifier>().profile();
+        context.read<ServiceNotifier>().homeData();
       },
       child: Container(
         padding: const EdgeInsets.all(8),
@@ -46,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+// ignore: unused_element
 Future<void> _paymentDialog(BuildContext context) {
   return showDialog<void>(
     barrierDismissible: false,
@@ -57,7 +57,7 @@ Future<void> _paymentDialog(BuildContext context) {
           textAlign: TextAlign.center,
         ),
         content: SizedBox(
-          height: 160,
+          height: 80,
           child: Column(
             children: [
               Text(
@@ -75,24 +75,24 @@ Future<void> _paymentDialog(BuildContext context) {
           ),
         ),
         actions: <Widget>[
-          TextButton(
+          OutlinedButton(
             style: TextButton.styleFrom(
               textStyle: Theme.of(context).textTheme.labelLarge,
             ),
-            child: const Text('Disable'),
+            child: const Text('Pay'),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
-          TextButton(
-            style: TextButton.styleFrom(
-              textStyle: Theme.of(context).textTheme.labelLarge,
-            ),
-            child: const Text('Enable'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
+          // TextButton(
+          //   style: TextButton.styleFrom(
+          //     textStyle: Theme.of(context).textTheme.labelLarge,
+          //   ),
+          //   child: const Text('Enable'),
+          //   onPressed: () {
+          //     Navigator.of(context).pop();
+          //   },
+          // ),
         ],
       );
     },
@@ -319,9 +319,9 @@ class _Amount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var margin = Provider.of<ServiceNotifier>(context).marginModel;
+    var homeModel = context.watch<ServiceNotifier>().homeModel;
 
-    if (margin == null) {
+    if (homeModel == null) {
       return SkeletonLine(
         style: SkeletonLineStyle(
           height: 150,
@@ -330,6 +330,10 @@ class _Amount extends StatelessWidget {
         ),
       );
     }
+
+    var profit = homeModel.fund?.pnl ?? 0;
+    var formattedProfit = Utils.formatWithoutCurrencySymbol(profit);
+    // var formattedProfit = profit > 0 ? '+$tempProfit' : '-$tempProfit';
     return Container(
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(
@@ -353,13 +357,13 @@ class _Amount extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 12.0, bottom: 8.0),
                 child: Text(
-                  Utils.formatCurrency(margin.equity?.net ?? 0),
+                  Utils.formatCurrency(homeModel.fund?.total ?? 0),
                   style: const TextStyle(fontSize: 25, color: Colors.white),
                 ),
               ),
-              const Text(
-                "+200 for today",
-                style: TextStyle(color: Colors.green, fontSize: 14),
+              Text(
+                profit == 0 ? '' : formattedProfit,
+                style: profit > 0 ? Styles.greenStyle : Styles.redStyle,
               )
             ],
           ),
@@ -376,8 +380,8 @@ class _HeaderView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var profile = Provider.of<ServiceNotifier>(context).profileModel;
-    if (profile == null) {
+    var homeModel = Provider.of<ServiceNotifier>(context).homeModel;
+    if (homeModel == null || homeModel.profile == null) {
       return const _ProfileLoaderWidget();
     }
     return Padding(
@@ -396,7 +400,7 @@ class _HeaderView extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.black,
                     image: DecorationImage(
-                      image: NetworkImage(profile.avatarUrl),
+                      image: NetworkImage(homeModel.profile?.avatarUrl ?? ''),
                     ),
                     borderRadius: const BorderRadius.all(
                       Radius.circular(8),
@@ -418,7 +422,7 @@ class _HeaderView extends StatelessWidget {
                       const SizedBox(
                         height: 4,
                       ),
-                      Text(profile.userShortname),
+                      Text(homeModel.profile?.userShortname ?? ''),
                     ],
                   ),
                 )

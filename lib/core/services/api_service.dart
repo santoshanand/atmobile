@@ -1,3 +1,4 @@
+import 'package:auto_trade/core/models/home_model.dart';
 import 'package:auto_trade/core/models/login_model.dart';
 import 'package:auto_trade/core/models/margin_model.dart';
 import 'package:auto_trade/core/models/profile_model.dart';
@@ -20,6 +21,7 @@ class APIService {
   final String _tradesUrl = '/trades';
   final String _stopUrl = '/stop';
   final String _marginUrl = '/margins';
+  final String _fullUrl = '/full';
 
   Dio get _dio {
     return Dio(
@@ -66,6 +68,7 @@ class APIService {
       return null;
     }
   }
+
 
   Future<ProfileModel> profile() async {
     LoginRequest? loginReq = await _getLoginRequest();
@@ -115,8 +118,27 @@ class APIService {
     }
   }
 
+
+  Future<HomeModel?> homeData() async {
+    LoginRequest? loginReq = await _getLoginRequest();
+    if (loginReq == null) {
+      return null;
+    }
+    try {
+      Response res = await _dio.post(_fullUrl, data: {'token': loginReq.token, 'user_id': loginReq.userId});
+      if (res.statusCode != 200) {
+        logout();
+        return null;
+      }
+      HomeModel apiRes = HomeModel.fromJson(res.data);
+      return apiRes;
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<void> logout() async {
-    await stopTrading(true);
+    // await stopTrading(true);
     await _cookieManager.clearCookies();
   }
 

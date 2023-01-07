@@ -7,8 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
-class AccountScreen extends StatelessWidget {
+class AccountScreen extends StatefulWidget {
   const AccountScreen({Key? key}) : super(key: key);
+
+  @override
+  State<AccountScreen> createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends State<AccountScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<ServiceNotifier>().profile();
+  }
 
   @override
   Widget build(BuildContext context) {

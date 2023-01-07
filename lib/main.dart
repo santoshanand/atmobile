@@ -6,16 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
-import 'core/services/api_service.dart';
-
 Future<void> main() async {
   await dotenv.load(fileName: Env.fileName);
-  var res = await APIService().login();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider<ServiceNotifier>(
-          create: (_) => ServiceNotifier(res),
+          create: (_) => ServiceNotifier(),
         ),
       ],
       child: const ConnectionNotifier(

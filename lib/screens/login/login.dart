@@ -11,9 +11,17 @@ import 'package:provider/provider.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class LoginScreenWithLoader extends StatelessWidget {
+class LoginScreenWithLoader extends StatefulWidget {
+  const LoginScreenWithLoader({Key? key}) : super(key: key);
+
+  @override
+  State<LoginScreenWithLoader> createState() => _LoginScreenWithLoaderState();
+}
+
+class _LoginScreenWithLoaderState extends State<LoginScreenWithLoader> {
   final cookieManager = WebviewCookieManager();
-  LoginScreenWithLoader({Key? key}) : super(key: key);
+
+  bool pageLoadingDone = false;
 
   @override
   Widget build(BuildContext context) {
@@ -43,32 +51,26 @@ class LoginScreenWithLoader extends StatelessWidget {
           onConnectionStatusChanged: (connected) {
             if (connected == null) return;
           },
-          connected: context.watch<ServiceNotifier>().loginFeching
-              ? const Loader()
-              : WebView(
-                  initialUrl: Env.kiteUrl,
-                  javascriptMode: JavascriptMode.unrestricted,
-                  onWebViewCreated: (WebViewController webViewController) {
-                    _controller.complete(webViewController);
-                  },
-                  onPageStarted: (url) {},
-                  onPageFinished: (String url) async {
-                    var loginReq = await _getLoginRequest();
-                    if (loginReq != null) {
-                      context.read<ServiceNotifier>().login();
-                      // var res = await ref.read(apiProvider).login();
-                      // if (res == null) {
-                      //   await ref.read(apiProvider).logout();
-                      //   an.setLoggedIn(false);
-                      // } else {
-                      //   an.setLoggedIn(true);
-                      // }
-                    }
-                  },
-                  zoomEnabled: false,
-                  gestureNavigationEnabled: true,
-                ),
+          loading: const Loader(),
           disconnected: const OfflineScreen(),
+          connected: WebView(
+            initialUrl: Env.kiteUrl,
+            javascriptMode: JavascriptMode.unrestricted,
+            onWebViewCreated: (WebViewController webViewController) {
+              _controller.complete(webViewController);
+            },
+            onPageStarted: (url) {},
+            onPageFinished: (String url) async {
+              var loginReq = await _getLoginRequest();
+              if (loginReq != null) {
+                try {
+                  context.read<ServiceNotifier>().login();
+                } catch (e) {debugPrint("ex: "+ e.toString());}
+              }
+            },
+            zoomEnabled: false,
+            gestureNavigationEnabled: true,
+          ),
         ),
       ),
     );

@@ -20,7 +20,7 @@ class OfflineScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               const Text(
-                "Coudn't connect to internet.",
+                "Couldn't connect to internet.",
               ),
               const Text("Please check your network settings."),
               const SizedBox(
