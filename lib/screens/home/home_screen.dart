@@ -53,7 +53,7 @@ class _PositionWidget extends StatelessWidget {
     }
 
     // homeModel.positions = [];
-    if (homeModel.positions!.isEmpty) {
+    if (homeModel.positions == null || homeModel.positions!.isEmpty) {
       return SizedBox(
         height: MediaQuery.of(context).size.height / 1.8,
         child: Center(
