@@ -2,18 +2,18 @@ import 'package:auto_trade/core/providers/api_provider.dart';
 import 'package:auto_trade/core/theme/app_theme.dart';
 import 'package:auto_trade/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class HomeScreenBackup extends StatefulWidget {
+  const HomeScreenBackup({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeScreenBackup> createState() => _HomeScreenBackupState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenBackupState extends State<HomeScreenBackup> {
   @override
   void initState() {
     super.initState();
@@ -430,7 +430,7 @@ class _HeaderView extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(
-                Ionicons.settings_outline,
+                Iconsax.setting,
                 color: Colors.grey,
               ),
               tooltip: 'Open Settings',

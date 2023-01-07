@@ -1,53 +1,41 @@
 import 'package:auto_trade/core/models/home_model.dart';
 import 'package:auto_trade/core/providers/api_provider.dart';
 import 'package:auto_trade/core/theme/app_theme.dart';
+import 'package:auto_trade/shared/container_box.dart';
 import 'package:auto_trade/shared/loaders/header_loader.dart';
+import 'package:auto_trade/shared/page_widget.dart';
+import 'package:auto_trade/shared/setting_widget.dart';
 import 'package:auto_trade/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
 
-class HomeScreenNew extends StatelessWidget {
-  const HomeScreenNew({Key? key}) : super(key: key);
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return NestedScrollView(
-      body: RefreshIndicator(
-        onRefresh: () async {
-          context.read<ServiceNotifier>().homeData();
-        },
-        child: Container(
-          color: Styles.bgColor,
-          child: ListView(
-            children: const <Widget>[
-              Padding(
-                padding: EdgeInsets.all(Styles.gap / 2),
-                child: _Amount(
-                  height: 140,
-                ),
+    return PageWidget(
+      onRefresh: () async {
+        context.read<ServiceNotifier>().homeData();
+      },
+      body: Container(
+        color: Styles.bgColor,
+        child: ListView(
+          children: const <Widget>[
+            Padding(
+              padding: EdgeInsets.all(Styles.margin),
+              child: _Amount(
+                height: 140,
               ),
-              _PositionWidget()
-            ],
-          ),
+            ),
+            _PositionWidget()
+          ],
         ),
       ),
-      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-        return [
-          SliverAppBar(
-            elevation: 0,
-            title: const _HeaderView(),
-            automaticallyImplyLeading: false,
-            expandedHeight: 30,
-            floating: true,
-            snap: true,
-            backgroundColor: Styles.whiteColor,
-          ),
-        ];
-      },
+      header: const _HeaderView(),
     );
   }
 }
@@ -355,13 +343,8 @@ class _Amount extends StatelessWidget {
 
     var pnl = homeModel.fund?.pnl ?? 0;
     var formattedProfit = pnl > 0 ? '+${Utils.formatWithoutCurrencySymbol(pnl)}' : Utils.formatWithoutCurrencySymbol(pnl);
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(4),
-        ),
-        color: Styles.darkColor,
-      ),
+    return ContainerBox(
+      color: Styles.colorBlack_37414F,
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: height,
@@ -421,7 +404,7 @@ class _HeaderView extends StatelessWidget {
             userName: userName,
             avatarUrl: avatarUrl,
           ),
-          const _DownIconWidget(),
+          const SettingWidget(),
         ],
       ),
     );
@@ -449,28 +432,6 @@ class _TitleAndImageWidget extends StatelessWidget {
           title: userName,
         )
       ],
-    );
-  }
-}
-
-class _DownIconWidget extends StatelessWidget {
-  const _DownIconWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Icon(
-        Ionicons.chevron_down_outline,
-        color: Styles.iconColor,
-      ),
-      onTap: () {
-        // showModalBottomSheet<void>(
-        //   context: context,
-        //   builder: (BuildContext context) {},
-        // );
-      },
     );
   }
 }

@@ -1,68 +1,59 @@
-import 'package:auto_trade/core/models/trade_model.dart';
+import 'package:auto_trade/core/theme/app_theme.dart';
+import 'package:auto_trade/screens/trade/search_screen.dart';
+import 'package:auto_trade/shared/container_box.dart';
+import 'package:auto_trade/shared/header_widget.dart';
+import 'package:auto_trade/shared/page_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:iconsax/iconsax.dart';
 
 class TradeScreen extends StatelessWidget {
   const TradeScreen({Key? key}) : super(key: key);
 
-  List<DataColumn> _createColumns() {
-    return [
-      const DataColumn(
-        label: Text('ID'),
-        numeric: true,
-      ),
-      const DataColumn(
-        label: Text('Name'),
-      ),
-      const DataColumn(
-        label: Text('Date'),
-      ),
-    ];
-  }
-
-  List<DataRow> _createRows(List<TradeModel> items) {
-    var index = 0;
-    return items.map((item) {
-      index++;
-      return DataRow(
-        cells: [
-          DataCell(
-            Text(
-              index.toString(),
-              style: const TextStyle(fontSize: 12),
-            ),
-          ),
-          DataCell(
-            Text(
-              item.zerodhaSymbol.toString(),
-              style: const TextStyle(fontSize: 12),
-            ),
-          ),
-          DataCell(
-            Text(
-              item.createdAt.toString(),
-              style: const TextStyle(fontSize: 12),
-            ),
-          ),
-        ],
-      );
-    }).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     // var sp = ref.watch(tradesProvider);
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: RefreshIndicator(
-        onRefresh: () async {
-          // sp = ref.refresh(tradesProvider);
-        },
-        child: SingleChildScrollView(
-            child: DataTable(
-          columns: _createColumns(),
-          rows: _createRows([]),
-          sortColumnIndex: 1,
-        )),
+    return PageWidget(
+      header: const HeaderWidget(
+        title: 'Trades',
+      ),
+      onRefresh: () async {},
+      body: Container(
+        color: Styles.bgColor,
+        child: ListView(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(Styles.margin),
+              child: GestureDetector(
+                onTap: () {
+                  showSearch(
+                      context: context,
+                      // delegate to customize the search bar
+                      delegate: CustomSearchDelegate());
+                },
+                child: ContainerBox(
+                  padding: const EdgeInsets.all(Styles.margin),
+                  color: const Color(0xffeeeeee),
+                  child: Flex(
+                    direction: Axis.horizontal,
+                    children: [
+                      Icon(
+                        Iconsax.search_normal_1,
+                        color: Styles.iconColor,
+                        size: 20,
+                      ),
+                      const Gap(8),
+                      Text(
+                        "Search",
+                        style: Styles.searchStyle,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -10,7 +10,7 @@ class AutoTradeLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       'assets/logo_small.svg',
-      color: Colors.grey,
+      color: Colors.grey[400],
       height: 54,
       semanticsLabel: 'Options Buy',
     );

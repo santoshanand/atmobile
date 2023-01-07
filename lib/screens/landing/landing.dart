@@ -1,9 +1,9 @@
 import 'package:auto_trade/core/providers/api_provider.dart';
-import 'package:auto_trade/screens/account/account_screen.dart';
-import 'package:auto_trade/screens/home/home_new.dart';
+import 'package:auto_trade/screens/account/account.dart';
+import 'package:auto_trade/screens/home/home_screen.dart';
 import 'package:auto_trade/screens/trade/trade_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
 class TabItem {
@@ -25,8 +25,7 @@ class LandingScreen extends StatefulWidget {
 
 class _LandingScreenState extends State<LandingScreen> {
   static final List<TabItem> _tabs = <TabItem>[
-    // TabItem(screen: const HomeScreen(), title: 'Home'),
-    TabItem(screen: const HomeScreenNew(), title: 'Home'),
+    TabItem(screen: const HomeScreen(), title: 'Home'),
     TabItem(screen: const TradeScreen(), title: 'Trades'),
     TabItem(screen: const AccountScreen(), title: 'Account'),
   ];
@@ -39,6 +38,7 @@ class _LandingScreenState extends State<LandingScreen> {
     context.read<ServiceNotifier>().login().then((value) {
       context.read<ServiceNotifier>().homeData();
     });
+
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     // });
   }
@@ -61,15 +61,15 @@ class _LandingScreenState extends State<LandingScreen> {
         onTap: _onItemTapped,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Ionicons.home_outline),
+            icon: Icon(Iconsax.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Ionicons.swap_horizontal_outline),
+            icon: Icon(Iconsax.arrow_swap),
             label: 'Trades',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Ionicons.person_outline),
+            icon: Icon(Iconsax.user),
             label: 'Account',
           ),
         ],
