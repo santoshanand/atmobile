@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 ThemeData get applicationTheme {
   return ThemeData(
@@ -138,5 +139,17 @@ class Styles {
 
   static TextStyle get badgeCircleText {
     return const TextStyle(color: Colors.white, fontSize: _badgeFontSize);
+  }
+
+  static get statusBarStyle {
+    return SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark,
+        statusBarColor: Color(0xffffffff), // status bar color
+        statusBarBrightness: Brightness.dark,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    );
   }
 }

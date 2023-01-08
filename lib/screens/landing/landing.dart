@@ -55,6 +55,7 @@ class _LandingScreenState extends State<LandingScreen> {
       resizeToAvoidBottomInset: false,
       body: SafeArea(child: _tabs[_selectedIndex].screen),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
         selectedFontSize: 12,
         unselectedFontSize: 12,
         currentIndex: _selectedIndex,

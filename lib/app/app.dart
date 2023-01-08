@@ -9,11 +9,7 @@ class AutoTrade extends StatelessWidget {
   const AutoTrade({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    //   systemNavigationBarColor: Colors.black,
-    //   systemNavigationBarIconBrightness: Brightness.dark,
-    //   statusBarColor: Color(0xffeeeeee), // status bar color
-    // ));
+    Styles.statusBarStyle;
     return MaterialApp(
       title: 'Options Buy',
       theme: applicationTheme,
